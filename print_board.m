@@ -5,7 +5,10 @@ function print_board(board)
     entries = max(double(board) .* (1:N)');
     entry_str = repelem([" "], 1, N*N);
     for li = find(locked_in)
-        entry_str(li) = num2str(entries(li));
+        entry_str(li) = " " + num2str(entries(li)) + " ";
+    end
+    for nli = find(~locked_in)
+        entry_str(nli) = "[" + num2str(sum(board(:,nli))) + "]";
     end
 
     es = reshape(entry_str, [N N]);
