@@ -47,15 +47,26 @@ board = true(N,N*N);
 %                2 0 6 0 0 0 0 0 0;
 %                4 0 3 0 5 0 0 0 7];
 
-board_start = [0 0 0 1 0 0 6 0 7;
-               1 0 0 0 0 0 0 0 0;
-               0 0 0 0 0 0 2 0 0;
-               0 3 2 5 0 0 0 0 0;
-               0 5 0 0 0 3 0 8 0;
-               0 0 0 0 0 0 4 0 0;
-               0 0 0 7 2 0 0 0 0;
-               4 0 0 0 0 0 0 3 0;
-               0 0 0 6 0 0 0 0 0];
+
+board_start = [5 6 3 4 7 2 1 0 0;
+               1 0 4 8 5 9 3 6 0;
+               0 0 0 0 1 0 5 4 0;
+               2 0 0 0 9 4 6 0 5;
+               4 0 0 1 6 0 0 2 3;
+               6 0 0 0 0 0 4 0 1;
+               0 0 0 0 3 0 0 1 4;
+               8 4 0 0 0 0 0 3 6;
+               3 0 6 0 4 0 0 5 0];
+
+% board_start = [0 0 0 1 0 0 6 0 7;
+%                1 0 0 0 0 0 0 0 0;
+%                0 0 0 0 0 0 2 0 0;
+%                0 3 2 5 0 0 0 0 0;
+%                0 5 0 0 0 3 0 8 0;
+%                0 0 0 0 0 0 4 0 0;
+%                0 0 0 7 2 0 0 0 0;
+%                4 0 0 0 0 0 0 3 0;
+%                0 0 0 6 0 0 0 0 0];
 
 % board_start = [0 0 12 6 0 0 7 0 18 0 5 24 0 10 1 0 0 4 0 0 0 0 0 0 0 
 % 2 0 19 0 13 0 0 0 10 0 0 0 0 0 0 0 0 18 5 0 0 0 0 0 1 
@@ -95,6 +106,7 @@ iter = 1;
 all_possible_boards = {board};
 next_round_boards = {};
 
+tic
 while true
     disp(['iter ' num2str(iter) ', ' num2str(length(all_possible_boards)) ' boards, loop size ' num2str(loop_search_size)]);
     no_diff = true;
@@ -104,6 +116,7 @@ while true
         new_board = b;
         invalid_board = false;
         for lsz = loop_search_size:-1:1
+            % new_board = searchForLoops(new_board, lsz, (1:N*N)');
             new_board = searchForLoops(new_board, lsz);
             if isempty(new_board)
                 % found an invalid board
@@ -166,8 +179,9 @@ while true
     next_round_boards = {};
     iter = iter + 1;
 end
+elt = toc;
 
-
+disp(['Finished in ' num2str(elt) ' sec']);
 disp(['difficulty: ' num2str(loop_search_size)])
 print_board(board);
 
