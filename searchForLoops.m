@@ -17,7 +17,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
     %columns
     for col=1:N
         r_idxs = (col-1)*N + (1:N);
-        r = board(:,r_idxs);
+        r = new_board(:,r_idxs);
         goodrange = find(sum(r,1) <= loop_sz);
         if isempty(goodrange)
             subsets = [];
@@ -44,7 +44,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
                 making_changes = any(new_board(col_union,r_idxs(complement)), 'all');
                 new_board(col_union,r_idxs(complement)) = false;
                 if any(r_idxs(complement) == stop_cell, 'all') && interactive && making_changes
-                    % keyboard
+                    keyboard
                 end
             end
         end
@@ -63,6 +63,8 @@ function new_board = searchForLoops(board, loop_sz, varargin)
         end
         % subsets = nchoosek(1:N, loop_sz);
         for ssi = 1:size(subsets,1)
+            ss = false(1,N);
+            ss(subsets(ssi,:)) = true;
             row_union = any(r(ss,:),1);
             if sum(row_union) < loop_sz
                 new_board = [];
@@ -73,7 +75,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
                 making_changes = any(new_board(complement,r_idxs(row_union)), 'all');
                 new_board(complement,r_idxs(row_union)) = false;
                 if any(r_idxs(complement) == stop_cell, 'all') && interactive && making_changes
-                    % keyboard
+                    keyboard
                 end
             end
         end
@@ -82,7 +84,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
     %row
     for row=1:N
         r_idxs = row:N:N*N;
-        r = board(:,r_idxs);
+        r = new_board(:,r_idxs);
         goodrange = find(sum(r,1) <= loop_sz);
         if isempty(goodrange)
             subsets = [];
@@ -109,7 +111,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
                 making_changes = any(new_board(col_union,r_idxs(complement)), 'all');
                 new_board(col_union,r_idxs(complement)) = false;
                 if any(r_idxs(complement) == stop_cell, 'all') && interactive && making_changes
-                    % keyboard
+                    keyboard
                 end
             end
         end
@@ -128,6 +130,8 @@ function new_board = searchForLoops(board, loop_sz, varargin)
         end
         % subsets = nchoosek(1:N, loop_sz);
         for ssi = 1:size(subsets,1)
+            ss = false(1,N);
+            ss(subsets(ssi,:)) = true;
             row_union = any(r(ss,:),1);
             if sum(row_union) < loop_sz
                 new_board = [];
@@ -138,7 +142,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
                 making_changes = any(new_board(complement,r_idxs(row_union)), 'all');
                 new_board(complement,r_idxs(row_union)) = false;
                 if any(r_idxs(complement) == stop_cell, 'all') && interactive && making_changes
-                    % keyboard
+                    keyboard
                 end
             end
         end
@@ -151,7 +155,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
             top_left = (row-1)*n + (col-1)*N*n + 1;
             r_idxs = (top_left + N*(0:n-1)) + (1:n)' - 1;
             r_idxs = r_idxs(:)';
-            r = board(:,r_idxs);
+            r = new_board(:,r_idxs);
             goodrange = find(sum(r,1) <= loop_sz);
             if isempty(goodrange)
                 subsets = [];
@@ -178,7 +182,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
                     making_changes = any(new_board(col_union,r_idxs(complement)), 'all');
                     new_board(col_union,r_idxs(complement)) = false;
                     if any(r_idxs(complement) == stop_cell, 'all') && interactive && making_changes
-                        % keyboard
+                        keyboard
                     end
                 end
             end
@@ -197,6 +201,8 @@ function new_board = searchForLoops(board, loop_sz, varargin)
             end
             % subsets = nchoosek(1:N, loop_sz);
             for ssi = 1:size(subsets,1)
+                ss = false(1,N);
+                ss(subsets(ssi,:)) = true;
                 row_union = any(r(ss,:),1);
                 if sum(row_union) < loop_sz
                     new_board = [];
@@ -207,7 +213,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
                     making_changes = any(new_board(complement,r_idxs(row_union)), 'all');
                     new_board(complement,r_idxs(row_union)) = false;
                     if any(r_idxs(complement) == stop_cell, 'all') && interactive && making_changes
-                        % keyboard
+                        keyboard
                     end
                 end
             end
@@ -216,7 +222,7 @@ function new_board = searchForLoops(board, loop_sz, varargin)
 
     %each number
     for num=1:N
-        r = reshape(board(num,:), N, N);
+        r = reshape(new_board(num,:), N, N);
         goodrange = find(sum(r,1) <= loop_sz);
         if isempty(goodrange)
             subsets = [];
@@ -265,6 +271,8 @@ function new_board = searchForLoops(board, loop_sz, varargin)
         end
         % subsets = nchoosek(1:N, loop_sz);
         for ssi = 1:size(subsets,1)
+            ss = false(1,N);
+            ss(subsets(ssi,:)) = true;
             row_union = any(r(ss,:),1);
             if sum(row_union) < loop_sz
                 new_board = [];

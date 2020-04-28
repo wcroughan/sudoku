@@ -4,6 +4,27 @@ assert(sqrt(N) == floor(sqrt(N)));
 
 board = true(N,N*N);
 
+% this board should have 9 ruled out in second row, right 3 cells. Looping strategy doesnt find that though
+% board_start = [0 0 0 9 0 0 0 0 0;
+%                0 0 0 0 0 0 0 0 0;
+%                0 1 2 0 0 0 0 0 0;
+%                0 0 0 0 0 0 0 0 0;
+%                9 0 0 0 0 0 0 0 0;
+%                0 0 0 0 0 0 0 0 0;
+%                0 0 0 0 0 0 0 0 0;
+%                0 0 0 0 0 0 0 0 0;
+%                0 0 0 0 0 0 0 0 0];
+
+% board_start = [5 0 0 6 0 0 7 0 0;
+%                0 8 0 7 4 0 9 0 0;
+%                0 0 0 0 0 0 0 0 8;
+%                0 0 0 0 0 8 3 0 1;
+%                3 2 0 0 0 0 0 4 5;
+%                1 0 6 4 0 0 0 0 0;
+%                7 0 0 0 0 0 0 0 0;
+%                0 0 9 0 2 6 0 8 0;
+%                0 0 2 0 0 1 0 0 6];
+
 % can be solved at depth 1
 % board_start = [8 0 0 0 0 0 2 0 5;
 %                4 7 5 2 6 9 1 0 0;
@@ -48,15 +69,15 @@ board = true(N,N*N);
 %                4 0 3 0 5 0 0 0 7];
 
 
-board_start = [5 6 3 4 7 2 1 0 0;
-               1 0 4 8 5 9 3 6 0;
-               0 0 0 0 1 0 5 4 0;
-               2 0 0 0 9 4 6 0 5;
-               4 0 0 1 6 0 0 2 3;
-               6 0 0 0 0 0 4 0 1;
-               0 0 0 0 3 0 0 1 4;
-               8 4 0 0 0 0 0 3 6;
-               3 0 6 0 4 0 0 5 0];
+% board_start = [5 6 3 4 7 2 1 0 0;
+%                1 0 4 8 5 9 3 6 0;
+%                0 0 0 0 1 0 5 4 0;
+%                2 0 0 0 9 4 6 0 5;
+%                4 0 0 1 6 0 0 2 3;
+%                6 0 0 0 0 0 4 0 1;
+%                0 0 0 0 3 0 0 1 4;
+%                8 4 0 0 0 0 0 3 6;
+%                3 0 6 0 4 0 0 5 0];
 
 % board_start = [0 0 0 1 0 0 6 0 7;
 %                1 0 0 0 0 0 0 0 0;
@@ -110,7 +131,8 @@ tic
 while true
     disp(['iter ' num2str(iter) ', ' num2str(length(all_possible_boards)) ' boards, loop size ' num2str(loop_search_size)]);
     no_diff = true;
-    max_search_size = max(1, sqrt(N) - length(all_possible_boards) + 1);
+    % max_search_size = max(1, sqrt(N) - length(all_possible_boards) + 1);
+    max_search_size = max(1, N - length(all_possible_boards) + 1);
     for bi = 1:length(all_possible_boards)
         b = all_possible_boards{bi};
         new_board = b;
@@ -123,12 +145,13 @@ while true
                 invalid_board = true;
                 break;
             end
+            disp(lsz);
+            print_board(new_board, true);
         end
         if invalid_board
             disp(['Eliminated board ' num2str(bi)])
             continue
         end
-        % print_board(new_board);
         solved = all(sum(new_board) == 1);
         if solved
             b = new_board;
@@ -138,22 +161,25 @@ while true
         end
         if all(new_board(:) == b(:))
             if loop_search_size == max_search_size
-                % disp("no more changes");
-                % disp(sum(sum(board) > 1));
-                % break;
-                numopts = sum(b);
-                numopts(numopts == 1) = N+1;
-                [nopts, celli] = min(numopts);
-                new_board(:,celli) = false;
-                for opti = find(b(:,celli)')
-                    new_board(opti,celli) = true;
-                    next_round_boards{end+1} = new_board;
-                    new_board(opti,celli) = false;
+                if false
+                    numopts = sum(b);
+                    numopts(numopts == 1) = N+1;
+                    [nopts, celli] = min(numopts);
+                    new_board(:,celli) = false;
+                    for opti = find(b(:,celli)')
+                        new_board(opti,celli) = true;
+                        next_round_boards{end+1} = new_board;
+                        new_board(opti,celli) = false;
+                    end
+                    disp(['adding ' num2str(nopts) ' possible boards in cell ' num2str(celli)]);
+                    % print_board(b)
+                    loop_search_size = 1;
+                    no_diff = false;
+                else
+                    disp("no more changes");
+                    disp(sum(sum(board) > 1));
+                    break;
                 end
-                disp(['adding ' num2str(nopts) ' possible boards in cell ' num2str(celli)]);
-                % print_board(b)
-                loop_search_size = 1;
-                no_diff = false;
             else
                 next_round_boards{end+1} = new_board;
             end
