@@ -4,6 +4,16 @@ assert(sqrt(N) == floor(sqrt(N)));
 
 board = true(N,N*N);
 
+ board_start = [3 8 0 7 2 5 4 1 0;
+                1 5 0 3 4 6 0 0 7;
+                0 0 0 9 1 8 3 0 5;
+                0 6 0 0 0 0 0 0 1;
+                5 1 0 4 0 9 7 0 8;
+                9 0 0 0 0 0 0 3 0;
+                8 3 7 6 5 0 0 0 0;
+                6 2 5 0 9 4 0 7 3;
+                4 9 1 0 7 3 0 0 0];
+
 % can be solved at depth 1
 % board_start = [8 0 0 0 0 0 2 0 5;
 %                4 7 5 2 6 9 1 0 0;
@@ -47,16 +57,16 @@ board = true(N,N*N);
 %                2 0 6 0 0 0 0 0 0;
 %                4 0 3 0 5 0 0 0 7];
 
-
-board_start = [5 6 3 4 7 2 1 0 0;
-               1 0 4 8 5 9 3 6 0;
-               0 0 0 0 1 0 5 4 0;
-               2 0 0 0 9 4 6 0 5;
-               4 0 0 1 6 0 0 2 3;
-               6 0 0 0 0 0 4 0 1;
-               0 0 0 0 3 0 0 1 4;
-               8 4 0 0 0 0 0 3 6;
-               3 0 6 0 4 0 0 5 0];
+%
+% board_start = [5 6 3 4 7 2 1 0 0;
+               % 1 0 4 8 5 9 3 6 0;
+               % 0 0 0 0 1 0 5 4 0;
+               % 2 0 0 0 9 4 6 0 5;
+               % 4 0 0 1 6 0 0 2 3;
+               % 6 0 0 0 0 0 4 0 1;
+               % 0 0 0 0 3 0 0 1 4;
+               % 8 4 0 0 0 0 0 3 6;
+               % 3 0 6 0 4 0 0 5 0];
 
 % board_start = [0 0 0 1 0 0 6 0 7;
 %                1 0 0 0 0 0 0 0 0;
@@ -105,6 +115,31 @@ iter = 1;
 
 all_possible_boards = {board};
 next_round_boards = {};
+
+JUST_A_HINT = true;
+if JUST_A_HINT
+	board = searchForLoops(board, 1);
+    print_board(board, true);
+	for lsz = 1:N
+		new_board = searchForLoops(board, lsz);
+		if any((sum(new_board) == 1) ~= (sum(board) == 1))
+			disp(lsz);
+			print_board(new_board);
+			return;
+        elseif any(board(:) ~= new_board(:))
+            board = new_board;
+			for s=lsz-1:-1:1
+				new_board = searchForLoops(board,s);
+                if any(board(:) ~= new_board(:))
+                    disp(s);
+                    print_board(new_board, true);
+                    board = new_board;
+                end
+			end
+		end
+		board = new_board;
+	end
+end
 
 tic
 while true
